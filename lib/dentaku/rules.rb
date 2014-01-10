@@ -43,22 +43,22 @@ module Dentaku
 
     def self.p(name)
       @patterns ||= {
-        group:      pattern(:open,    :non_group_star, :close),
-        math_add:   pattern(:numeric, :addsub,         :numeric),
-        math_mul:   pattern(:numeric, :muldiv,         :numeric),
-        math_pow:   pattern(:numeric, :pow,            :numeric),
-        range_asc:  pattern(:numeric, :comp_lt,        :numeric,  :comp_lt, :numeric),
-        range_desc: pattern(:numeric, :comp_gt,        :numeric,  :comp_gt, :numeric),
-        num_comp:   pattern(:numeric, :comparator,     :numeric),
-        str_comp:   pattern(:string,  :comparator,     :string),
-        combine:    pattern(:logical, :combinator,     :logical),
+        :group =>     pattern(:open,    :non_group_star, :close),
+        :math_add =>   pattern(:numeric, :addsub,         :numeric),
+        :math_mul =>   pattern(:numeric, :muldiv,         :numeric),
+        :math_pow =>   pattern(:numeric, :pow,            :numeric),
+        :range_asc =>  pattern(:numeric, :comp_lt,        :numeric,  :comp_lt, :numeric),
+        :range_desc => pattern(:numeric, :comp_gt,        :numeric,  :comp_gt, :numeric),
+        :num_comp =>   pattern(:numeric, :comparator,     :numeric),
+        :str_comp =>   pattern(:string,  :comparator,     :string),
+        :combine =>    pattern(:logical, :combinator,     :logical),
 
-        if:         func_pattern(:if,        :non_group,      :comma, :non_group, :comma, :non_group),
-        round_one:  func_pattern(:round,     :non_group_star),
-        round_two:  func_pattern(:round,     :non_group_star, :comma, :numeric),
-        roundup:    func_pattern(:roundup,   :non_group_star),
-        rounddown:  func_pattern(:rounddown, :non_group_star),
-        not:        func_pattern(:not,       :non_group_star)
+        :if =>         func_pattern(:if,        :non_group,      :comma, :non_group, :comma, :non_group),
+        :round_one =>  func_pattern(:round,     :non_group_star),
+        :round_two =>  func_pattern(:round,     :non_group_star, :comma, :numeric),
+        :roundup =>    func_pattern(:roundup,   :non_group_star),
+        :rounddown =>  func_pattern(:rounddown, :non_group_star),
+        :not =>        func_pattern(:not,       :non_group_star)
       }
 
       @patterns[name]
@@ -69,7 +69,7 @@ module Dentaku
     end
 
     def self.func_pattern(func, *tokens)
-      pattern(func, :open, *tokens, :close)
+      pattern(func, :open, tokens.pop, :close)
     end
   end
 end
