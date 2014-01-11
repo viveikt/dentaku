@@ -34,8 +34,9 @@ module Dentaku
         :non_group, :non_group_star,
         :logical, :combinator,
         :if, :round, :roundup, :rounddown, :not
-      ].each_with_object({}) do |name, matchers|
-        matchers[name] = TokenMatcher.send(name)
+      ].inject({}) do |matchers, matcher_name|
+        matchers[matcher_name] = TokenMatcher.send(matcher_name)
+        matchers
       end
 
       @matchers[name]
@@ -43,7 +44,7 @@ module Dentaku
 
     def self.p(name)
       @patterns ||= {
-        :group =>     pattern(:open,    :non_group_star, :close),
+        :group  =>     pattern(:open,    :non_group_star, :close),
         :math_add =>   pattern(:numeric, :addsub,         :numeric),
         :math_mul =>   pattern(:numeric, :muldiv,         :numeric),
         :math_pow =>   pattern(:numeric, :pow,            :numeric),
@@ -69,7 +70,7 @@ module Dentaku
     end
 
     def self.func_pattern(func, *tokens)
-      pattern(func, :open, tokens.pop, :close)
+       pattern(func, :open, *tokens).push t(:close)
     end
   end
 end

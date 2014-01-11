@@ -86,14 +86,16 @@ module Dentaku
       _, _, *tokens = args
       tokens.pop
 
-      input_tokens, places_tokens = tokens.chunk { |t| t.category == :grouping }.
-                                          reject { |flag, tokens| flag }.
-                                             map { |flag, tokens| tokens }
-
+      input_tokens  = tokens.take_while { |t| t.category != :grouping }
+      places_tokens = tokens.drop_while { |t| t.category != :grouping }.drop_while { |t| t.category == :grouping }
       input_value  = evaluate_token_stream(input_tokens).value
-      places       = places_tokens ? evaluate_token_stream(places_tokens).value : 0
+      places       = places_tokens.any? ? evaluate_token_stream(places_tokens).value : 0
 
-      value = input_value.round(places)
+      if places == 0
+        value = input_value.round
+      else
+        value = (input_value * 10 ** places).round / (10 ** places).to_f
+      end
 
       Token.new(:numeric, value)
     end
